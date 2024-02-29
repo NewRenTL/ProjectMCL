@@ -14,7 +14,6 @@ private:
     double limiteMonto;
     string fechaCorte;
     string fechaPago;
-
 public:
     TCredito( string _numero, bool _estado, string _ccv, double _interes, double _limiteMonto,
               string _fechaCorte, string _fechaPago) : Tarjeta(_numero, _estado, _ccv){
