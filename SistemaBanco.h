@@ -156,7 +156,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
     void accesoCuentasAhorro()
     {
         std::string existDni;
-        std::cout << "Enter a DNI to associate for client:" << std::endl;
+        std::cout << "Ingresa el DNI del cliente:" << std::endl;
         std::cin >> existDni;
         Cliente *saveCliente;
         bool existsDniBool = false;
@@ -214,31 +214,49 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 Tarjeta *tarjetaDebitoNueva = new TDebito(newNumberTarjeta, true, newCCV, fechaVencimientoNueva);
                 tarjetas.push_back(tarjetaDebitoNueva);
                 Cuenta *cuentaNueva = new Cuenta(newNumberAccount, tipoCuenta::cuentaAhorro, tarjetaDebitoNueva);
+                cuentas.push_back(cuentaNueva);
                 saveCliente->addCuenta(cuentaNueva);
-                std::cout << "Cuenta Generada!!" << std::endl;
+                std::cout << "Cuenta Debito Generada!!" << std::endl;
             }
             else if (number == 3)
             {
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
+                    // No diferenciara entre Activadas o desactivadas
                     if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
+                        std::cout << "Numero de Cuenta:" << saveCliente->getCuentas()[i]->getNumero() << endl;
                         std::cout << "-------------" << std::endl;
-                        std::cout << saveCliente->getCuentas()[i]->getTarjeta();
+                        if (saveCliente->getCuentas()[i]->getTarjeta() != nullptr)
+                        {
+                            std::cout << saveCliente->getCuentas()[i]->getTarjeta();
+                        }
+                        else
+                        {
+                            std::cout << "La tarjeta fue Cancelada" << endl;
+                        }
                         std::cout << "-------------" << std::endl;
                     }
                 }
+
                 std::string buscarTarjeta;
                 std::cout << "Ingrese el numero de tarjeta a cancelar:";
                 std::cin >> buscarTarjeta;
+                // Busca el numero de tarjeta en las cuentas del cliente
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
+                    // Se asegure que busque en las cuentas de ahorro
                     if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getTarjeta()->getNumero() == buscarTarjeta)
                     {
+                        // Falta añadir una condición para verificar si la tarjeta esta activa o esta eliminada
+
+                        // Una vez la cuentra cancela la tarjeta pero no la elimina, pero deja espacio para otra tarjeta
                         std::cout << "-------------" << std::endl;
-                        std::cout << saveCliente->getCuentas()[i]->getTarjeta();
-                        saveCliente->getCuentas()[i]->setestado(false);
+                        std::string numeroTarjetaCancelar = saveCliente->getCuentas()[i]->getTarjeta()->getNumero();
+                        std::cout << "Numero de tarjeta a cancelar:" << numeroTarjetaCancelar << endl;
+                        saveCliente->getCuentas()[i]->getTarjeta()->setEstado(false);
                         saveCliente->getCuentas()[i]->setTarjeta(nullptr);
+                        std::cout << "La tarjeta " << numeroTarjetaCancelar << " fue cancelada" << endl;
                         std::cout << "-------------" << std::endl;
                         break;
                     }
@@ -253,10 +271,14 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 bool exito = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
+                    // Verificamos que la cuenta sea de Ahorro, el numero de cuenta coincida y que la tarjeta no exista
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro 
+                    && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar 
+                    && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
                     {
                         std::cout << "Generando Tarjeta..." << std::endl;
                         std::string newNumberTarjeta = generateNumberCard();
+                        std::cout << "Numero de Tarjeta:" << newNumberTarjeta << endl;
                         std::string newCCV = generateCCV();
                         std::cout << "CCV:" << newCCV << std::endl;
                         std::string fechaVencimientoNueva = "02/04/2027";
@@ -264,7 +286,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                         Tarjeta *tarjetaDebitoNueva = new TDebito(newNumberTarjeta, true, newCCV, fechaVencimientoNueva);
                         tarjetas.push_back(tarjetaDebitoNueva);
                         saveCliente->getCuentas()[i]->setTarjeta(tarjetaDebitoNueva);
-                        std::cout << "Tarjeta Generada!!" << std::endl;
+                        std::cout << "Tarjeta Credito Generada!!" << std::endl;
                         exito = true;
                         break;
                     }
@@ -279,25 +301,29 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 std::string numeroCuentaBuscar;
                 std::cout << "Ingresa el numero de cuenta de ahorro:";
                 std::cin >> numeroCuentaBuscar;
+
                 bool encontradoCuenta = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
+                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar 
+                    && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
                         // Desactivamos la cuenta
                         saveCliente->getCuentas()[i]->setestado(false);
-                        // Desactivamos las tarjetas asociadas a la cuenta
+                        // Desactivamos las tarjeta asociada a la cuenta
                         if (saveCliente->getCuentas()[i]->getTarjeta() != nullptr)
                         {
                             saveCliente->getCuentas()[i]->getTarjeta()->setEstado(false);
                         }
+                        std::cout << "Las cuenta " << saveCliente->getCuentas()[i]->getNumero() << " fue cancelada" << endl;
+
                         encontradoCuenta = true;
                         break;
                     }
                 }
-                if(encontradoCuenta == false)
+                if (encontradoCuenta == false)
                 {
-                    cout<<"No se encontro la cuenta de ahorro"<<endl;
+                    cout << "No se encontro la cuenta de ahorro" << endl;
                 }
             }
             else if (number == 6)
@@ -305,10 +331,13 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 // Listar cuentas de ahorro
                 for (int i = 0; i < cuentas.size(); i++)
                 {
+                    // No diferenciara en cuentas activadas o desactivadas
                     if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
                         std::cout << "---------------------" << std::endl;
                         std::cout << cuentas[i] << std::endl;
+                        // Por suerte no imprimira la tarjeta, asegurandonos
+                        // que no ocurra un error si la tarjeta no existe en la cuenta
                         std::cout << "---------------------" << std::endl;
                     }
                 }
@@ -320,10 +349,11 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 cin >> monto_a_Depositar;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
+                    // Te mostrare todas las cuenta de ahorro activas
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getestado() == true)
                     {
                         std::cout << "------------------" << endl;
-                        std::cout << cuentas[i] << endl;
+                        std::cout << saveCliente->getCuentas()[i] << endl;
                         std::cout << "------------------" << endl;
                     }
                 }
@@ -334,8 +364,10 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 bool cuentaClienteeligdaexiste = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaElegida)
+                    // Verificaremos que el tipo de cuenta sea ahorro, el mismo numero y este activa
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaElegida && saveCliente->getCuentas()[i]->getestado() == true)
                     {
+                        // Verificaremos si hay suficiente dinero para el deposito
                         if (saveCliente->getCuentas()[i]->getmonto() < monto_a_Depositar)
                         {
                             std::cout << "La cantidad de dinero en la cuenta no es suficiente" << endl;
@@ -349,16 +381,19 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                             bool cuentaEncontrada = false;
                             for (int i = 0; i < cuentas.size(); i++)
                             {
-                                if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && cuentas[i]->getNumero() == numCuentaADepositar)
+                                // Buscamos la cuenta a depositar,tipoAhorro,mismo numero y este activa
+                                if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && cuentas[i]->getNumero() == numCuentaADepositar && cuentas[i]->getestado() == true)
                                 {
                                     std::cout << "Cuenta encontrada con exito!" << endl;
 
+                                    // Comprobacion que encontramos una cuenta
                                     cuentaEncontrada = true;
 
                                     std::cout << "Depositando dinero..." << endl;
                                     std::string fechaDepositoHoy;
                                     std::cout << "Ingrese la fecha:";
                                     cin >> fechaDepositoHoy;
+
                                     Deposito *newDeposito = new Deposito(numCuentaElegida, numCuentaADepositar, monto_a_Depositar, fechaDepositoHoy, tipoCuenta::cuentaAhorro);
 
                                     // Guardo el deposito en ambas cuentas
@@ -400,7 +435,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
     void accesoCuentasCredito()
     {
         std::string existDni;
-        std::cout << "Enter a DNI to associate for client:" << std::endl;
+        std::cout << "Ingresa el Dni del Cliente:" << std::endl;
         std::cin >> existDni;
         Cliente *saveCliente;
         bool existsDniBool = false;
@@ -448,8 +483,9 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
             {
                 std::cout << "Generando Cuenta..." << std::endl;
                 std::string newNumberAccount = generateNumberAccount();
-                std::string newNumberTarjeta = generateNumberCard();
                 std::cout << "Numero de Cuenta:" << newNumberAccount << std::endl;
+                std::string newNumberTarjeta = generateNumberCard();
+                std::cout << "Numero de tarjeta:" << newNumberTarjeta << endl;
                 std::string newCCV = generateCCV();
                 std::cout << "CCV:" << newCCV << std::endl;
                 std::string fechaCorte;
@@ -458,15 +494,21 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 std::string fechaPago;
                 std::cout << "Ingrese fecha de Pago:";
                 cin >> fechaPago;
+                // Interes por defecto del 20%
                 double interes = 20;
                 std::cout << "Interes:" << interes << "%" << endl;
                 double limiteMonto = 20000.0;
+                // Monto por defecto maxixmo de 20000.0
                 std::cout << "Limite Monto:" << limiteMonto << endl;
+
                 Tarjeta *tarjetaCreditoNueva = new TCredito(newNumberTarjeta, true, newCCV, interes, limiteMonto, fechaCorte, fechaPago);
                 tarjetas.push_back(tarjetaCreditoNueva);
+
                 Cuenta *cuentaNueva = new Cuenta(newNumberAccount, tipoCuenta::cuentaCredito, tarjetaCreditoNueva);
+                cuentas.push_back(cuentaNueva);
                 saveCliente->addCuenta(cuentaNueva);
-                std::cout << "Cuenta Generada!!" << std::endl;
+
+                std::cout << "Cuenta Credito Generada!!" << std::endl;
             }
             else if (number == 3)
             {
@@ -475,7 +517,15 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                     if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
                     {
                         std::cout << "-------------" << std::endl;
-                        std::cout << saveCliente->getCuentas()[i]->getTarjeta();
+                        if (saveCliente->getCuentas()[i]->getTarjeta() != nullptr)
+                        {
+                            std::cout << saveCliente->getCuentas()[i]->getTarjeta();
+                        }
+                        else
+                        {
+                            std::cout << "La tarjeta fue Cancelada" << endl;
+                        }
+
                         std::cout << "-------------" << std::endl;
                     }
                 }
@@ -487,9 +537,12 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                     if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito && saveCliente->getCuentas()[i]->getTarjeta()->getNumero() == buscarTarjeta)
                     {
                         std::cout << "-------------" << std::endl;
-                        std::cout << saveCliente->getCuentas()[i]->getTarjeta();
+                        std::string numeroTarjetaCancelar = saveCliente->getCuentas()[i]->getTarjeta()->getNumero();
+
+                        std::cout << "Numero de tarjeta a cancelar:" << numeroTarjetaCancelar << endl;
                         saveCliente->getCuentas()[i]->setestado(false);
                         saveCliente->getCuentas()[i]->setTarjeta(nullptr);
+                        std::cout << "La tarjeta " << numeroTarjetaCancelar << " fue cancelada" << endl;
                         std::cout << "-------------" << std::endl;
                         break;
                     }
@@ -503,10 +556,13 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 bool exito = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro 
+                    && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar 
+                    && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
                     {
                         std::cout << "Generando Tarjeta..." << std::endl;
                         std::string newNumberTarjeta = generateNumberCard();
+                        std::cout<<"Numero de tarjeta:"<<newNumberTarjeta<<endl;
                         std::string newCCV = generateCCV();
                         std::cout << "CCV:" << newCCV << std::endl;
                         std::string fechaCorte;
@@ -519,10 +575,15 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                         std::cout << "Interes:" << interes << "%" << endl;
                         double limiteMonto = 20000.0;
                         std::cout << "Limite Monto:" << limiteMonto << endl;
+                        //Creamos la tarjeta de Credito
                         Tarjeta *tarjetaCreditoNueva = new TCredito(newNumberTarjeta, true, newCCV, interes, limiteMonto, fechaCorte, fechaPago);
+                        
+                        //Agregar a tarjetas del banco
                         tarjetas.push_back(tarjetaCreditoNueva);
+
                         saveCliente->getCuentas()[i]->setTarjeta(tarjetaCreditoNueva);
-                        std::cout << "Tarjeta Generada!!" << std::endl;
+                        
+                        std::cout << "Tarjeta Credito Generada!!" << std::endl;
                         exito = true;
                         break;
                     }
@@ -540,11 +601,12 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 bool encontradoCuenta = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
+                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar 
+                    && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
                     {
                         // Desactivamos la cuenta
                         saveCliente->getCuentas()[i]->setestado(false);
-                        // Desactivamos las tarjetas asociadas a la cuenta
+                        // Desactivamos las tarjeta asociada a la cuenta
                         if (saveCliente->getCuentas()[i]->getTarjeta() != nullptr)
                         {
                             saveCliente->getCuentas()[i]->getTarjeta()->setEstado(false);
@@ -553,26 +615,29 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                         break;
                     }
                 }
-                if(encontradoCuenta == false)
+                if (encontradoCuenta == false)
                 {
-                    cout<<"No se encontro la cuenta de credito"<<endl;
+                    cout << "No se encontro la cuenta de credito" << endl;
                 }
             }
             else if (number == 6)
             {
+                std::cout<<"Lista de cuentas:"<<endl;
                 for (int i = 0; i < cuentas.size(); i++)
                 {
                     if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
                     {
                         std::cout << "---------------------" << std::endl;
                         std::cout << cuentas[i] << std::endl;
+                        // Por suerte no imprimira la tarjeta, asegurandonos
+                        // que no ocurra un error si la tarjeta no existe en la cuenta
                         std::cout << "---------------------" << std::endl;
                     }
                 }
             }
-            else if(number == 7)
+            else if (number == 7)
             {
-                cout<<"Regresando"<<endl;
+                cout << "Regresando" << endl;
             }
         }
         else

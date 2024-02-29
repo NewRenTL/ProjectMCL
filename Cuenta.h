@@ -76,8 +76,8 @@ public:
 ostream& operator<<(ostream& os, Cuenta* cuenta)
 {
     os<<"Numero Cuenta:"<<cuenta->getNumero()<<endl;
-    os<<"Activa:"<<cuenta->getestado()<<endl;
-    os<<"Monto:"<<cuenta->getmonto()<<endl;
+    os<<"Estado:"<<(cuenta->getestado()?"Activa":"Inactiva")<<endl;
+    os<<"Monto:"<<"S/"<<cuenta->getmonto()<<endl;
     return os;
 }
 
