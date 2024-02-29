@@ -240,7 +240,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                     }
                 }
             }
-            else if (number == 4)
+            else if ()
             {
 
                 std::string numCuentaBuscar;
