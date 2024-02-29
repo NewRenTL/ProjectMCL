@@ -408,7 +408,7 @@ public:
                 accesoCliente();
                 break;
             case 2:
-                accesoCliente();
+                accesoCuentasAhorro();
                 break;
             case 3:
                 accesoCliente();
