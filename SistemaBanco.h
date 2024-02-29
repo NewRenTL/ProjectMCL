@@ -240,7 +240,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                     }
                 }
             }
-            else if ()
+            else if (number == 4)
             {
 
                 std::string numCuentaBuscar;
@@ -269,6 +269,39 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 {
                     std::cout<<"Numero de cuenta no encontrado o cuenta con tarjeta ya existente"<<std::endl;
                 }
+            }
+            else if(number == 5)
+            {
+                std::string numeroCuentaBuscar;
+                std::cout<<"Ingresa el numero de cuenta de ahorro:";
+                std::cin>>numeroCuentaBuscar;
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if(saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta= cuentaAhorro)
+                    {
+                        //Desactivamos la cuenta
+                        saveCliente->getCuentas()[i]->setestado(false);
+                        //Desactivamos las tarjetas asociadas a la cuenta
+                        if(saveCliente->getCuentas()[i]->getTarjeta() != nullptr)
+                        {
+                            saveCliente->getCuentas()[i]->getTarjeta()->setEstado(false);
+                        }
+                    }
+                }
+            }
+            else if(number == 6)
+            {
+                //Listar cuentas de ahorro 
+                for (int i = 0; i < cuentas.size(); i++)
+                {
+                    if(cuentas[i]->getTipoCuenta() == cuentaAhorro)
+                    {
+                        std::cout<<"---------------------"<<std::endl;
+                        std::cout<<cuentas[i]<<std::endl;
+                        std::cout<<"---------------------"<<std::endl;
+                    }
+                }
+                
             }
         }
         else
