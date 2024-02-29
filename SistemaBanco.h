@@ -277,7 +277,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 std::cin>>numeroCuentaBuscar;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if(saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta= cuentaAhorro)
+                    if(saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta()== cuentaAhorro)
                     {
                         //Desactivamos la cuenta
                         saveCliente->getCuentas()[i]->setestado(false);
