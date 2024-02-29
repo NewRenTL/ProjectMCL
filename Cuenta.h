@@ -6,13 +6,11 @@
 #define PROYECTO_FFFFF_CUENTA_H
 #include <iostream>
 #include "Tarjeta.h"
+#include <vector>
+#include "util.h"
 #include "Deposito.h"
 using namespace std;
 
-enum tipoCuenta{  // es una enumeración
-    cuentaAhorro = 0,
-    cuentaCredito = 1
-};
 
 class Cuenta{
 private:
@@ -20,12 +18,12 @@ private:
     double monto;
     bool estado;
     tipoCuenta tipoCuenta;
-    vector <Deposito*> depositos;
+    std::vector<Deposito*> depositos;
     Tarjeta *tarjeta; //puntero a una tarjeta
 
 public:
 
-    Cuenta(string _numero, enum::tipoCuenta _tipoCuenta,Tarjeta *tarjeta1){
+    Cuenta(string _numero,enum::tipoCuenta _tipoCuenta,Tarjeta *tarjeta1){
         numero = _numero;
         tipoCuenta = _tipoCuenta;
         tarjeta = tarjeta1;
@@ -82,4 +80,5 @@ ostream& operator<<(ostream& os, Cuenta* cuenta)
     os<<"Monto:"<<cuenta->getmonto()<<endl;
     return os;
 }
+
 #endif //PROYECTO_FFFFF_CUENTA_H

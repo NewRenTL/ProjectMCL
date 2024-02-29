@@ -5,7 +5,7 @@
 #ifndef PROYECTO_FFFFF_SISTEMABANCO_H
 #define PROYECTO_FFFFF_SISTEMABANCO_H
 
-#endif // PROYECTO_FFFFF_SISTEMABANCO_H
+
 
 // no incluimos tarjeta porque esta dentro de clientes y TCredito y TDebito a están dentro de tarjeta
 #include "Cuenta.h"
@@ -13,6 +13,7 @@
 #include "Cliente.h"
 #include <iostream>
 #include "TDebito.h"
+#include "util.h"
 #include <regex>
 using namespace std;
 
@@ -23,7 +24,7 @@ private:
     vector<Cliente *> clientes;
     vector<Cuenta *> cuentas;
     vector<Tarjeta *> tarjetas;
-    vector<Deposito*> depositos;
+    vector<Deposito *> depositos;
 
 private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a optimizar procesos dentro de las funciones publicas
     // o sea el usuario no puede utilizar estos metodos
@@ -78,6 +79,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         cout << "----------- SERVICIOS -------------" << endl;
         cout << "1. Clientes" << endl;
         cout << "2. Cuentas de ahorro" << endl;
+        cout << "3. Cuentas de credito" << endl;
         cout << "3. Prestamos de dinero" << endl;
         cout << "4. Salir" << endl;
         cout << "-----------------------" << endl;
@@ -92,7 +94,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         cout << "1.1 Buscar cliente" << endl;
         cout << "1.2 Agregar cliente" << endl;
         cout << "1.3 Eliminar cliente" << endl;
-        cout << "1.4 Listar servicios de cliente"<<endl;
+        cout << "1.4 Listar servicios de cliente" << endl;
         cout << "1.5 Regresar" << endl;
         cout << "-----------------------" << endl;
         cout << "Ingresa tu opcion: ";
@@ -177,7 +179,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
             cout << "1.4 Solicitar Tarjeta Debito" << endl;
             cout << "1.5 Cancelar Cuenta de Ahorro" << endl;
             cout << "1.6 Solicitar todas las cuentas de ahorro" << endl;
-            cout << "1.7 Realizar un deposito"<<endl;
+            cout << "1.7 Realizar un deposito" << endl;
             cout << "1.8 Regresar" << endl;
             std::cout << "Ingresar una opcion:";
             cin >> number;
@@ -212,7 +214,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 std::cout << "Vencimiento:" << fechaVencimientoNueva << std::endl;
                 Tarjeta *tarjetaDebitoNueva = new TDebito(newNumberTarjeta, true, newCCV, fechaVencimientoNueva);
                 tarjetas.push_back(tarjetaDebitoNueva);
-                Cuenta *cuentaNueva = new Cuenta(newNumberAccount, cuentaAhorro, tarjetaDebitoNueva);
+                Cuenta *cuentaNueva = new Cuenta(newNumberAccount, tipoCuenta::cuentaAhorro, tarjetaDebitoNueva);
                 saveCliente->addCuenta(cuentaNueva);
                 std::cout << "Cuenta Generada!!" << std::endl;
             }
@@ -220,7 +222,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
             {
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == cuentaAhorro)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
                         std::cout << "-------------" << std::endl;
                         std::cout << saveCliente->getCuentas()[i]->getTarjeta();
@@ -232,7 +234,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 std::cin >> buscarTarjeta;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == cuentaAhorro && saveCliente->getCuentas()[i]->getTarjeta()->getNumero() == buscarTarjeta)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getTarjeta()->getNumero() == buscarTarjeta)
                     {
                         std::cout << "-------------" << std::endl;
                         std::cout << saveCliente->getCuentas()[i]->getTarjeta();
@@ -248,11 +250,11 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
 
                 std::string numCuentaBuscar;
                 std::cout << "Ingresa su numero de cuenta:";
-                cin>>numCuentaBuscar;
+                cin >> numCuentaBuscar;
                 bool exito = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
                     {
                         std::cout << "Generando Tarjeta..." << std::endl;
                         std::string newNumberTarjeta = generateNumberCard();
@@ -268,127 +270,141 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                         break;
                     }
                 }
-                if(exito == false)
+                if (exito == false)
                 {
-                    std::cout<<"Numero de cuenta no encontrado o cuenta con tarjeta ya existente"<<std::endl;
+                    std::cout << "Numero de cuenta no encontrado o cuenta con tarjeta ya existente" << std::endl;
                 }
             }
-            else if(number == 5)
+            else if (number == 5)
             {
                 std::string numeroCuentaBuscar;
-                std::cout<<"Ingresa el numero de cuenta de ahorro:";
-                std::cin>>numeroCuentaBuscar;
+                std::cout << "Ingresa el numero de cuenta de ahorro:";
+                std::cin >> numeroCuentaBuscar;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if(saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta()== cuentaAhorro)
+                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
-                        //Desactivamos la cuenta
+                        // Desactivamos la cuenta
                         saveCliente->getCuentas()[i]->setestado(false);
-                        //Desactivamos las tarjetas asociadas a la cuenta
-                        if(saveCliente->getCuentas()[i]->getTarjeta() != nullptr)
+                        // Desactivamos las tarjetas asociadas a la cuenta
+                        if (saveCliente->getCuentas()[i]->getTarjeta() != nullptr)
                         {
                             saveCliente->getCuentas()[i]->getTarjeta()->setEstado(false);
                         }
                     }
                 }
             }
-            else if(number == 6)
+            else if (number == 6)
             {
-                //Listar cuentas de ahorro 
+                // Listar cuentas de ahorro
                 for (int i = 0; i < cuentas.size(); i++)
                 {
-                    if(cuentas[i]->getTipoCuenta() == cuentaAhorro)
+                    if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
-                        std::cout<<"---------------------"<<std::endl;
-                        std::cout<<cuentas[i]<<std::endl;
-                        std::cout<<"---------------------"<<std::endl;
+                        std::cout << "---------------------" << std::endl;
+                        std::cout << cuentas[i] << std::endl;
+                        std::cout << "---------------------" << std::endl;
                     }
                 }
             }
-            else if(number == 7)
+            else if (number == 7)
             {
                 double monto_a_Depositar;
-                cout<<"Cual es el monto a depositar:";
-                cin>>monto_a_Depositar;
+                cout << "Cual es el monto a depositar:";
+                cin >> monto_a_Depositar;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if(saveCliente->getCuentas()[i]->getTipoCuenta() == cuentaAhorro)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
-                        std::cout<<"------------------"<<endl;
-                        std::cout<<cuentas[i]<<endl;
-                        std::cout<<"------------------"<<endl;
+                        std::cout << "------------------" << endl;
+                        std::cout << cuentas[i] << endl;
+                        std::cout << "------------------" << endl;
                     }
                 }
-                //Cuenta del cliente que elegira para depositar
+                // Cuenta del cliente que elegira para depositar
                 std::string numCuentaElegida;
-                std::cout<<"Ingrese su numero cuenta que elegira para depositar";
-                cin>>numCuentaElegida;  
+                std::cout << "Ingrese su numero cuenta que elegira para depositar";
+                cin >> numCuentaElegida;
                 bool cuentaClienteeligdaexiste = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if(saveCliente->getCuentas()[i]->getTipoCuenta() == cuentaAhorro && saveCliente->getCuentas()[i]->getNumero()==numCuentaElegida)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaElegida)
                     {
-                        if(saveCliente->getCuentas()[i]->getmonto() < monto_a_Depositar)
+                        if (saveCliente->getCuentas()[i]->getmonto() < monto_a_Depositar)
                         {
-                            std::cout<<"La cantidad de dinero en la cuenta no es suficiente"<<endl;
+                            std::cout << "La cantidad de dinero en la cuenta no es suficiente" << endl;
                         }
-                        if(saveCliente->getCuentas()[i]->getmonto() >= monto_a_Depositar)
+                        if (saveCliente->getCuentas()[i]->getmonto() >= monto_a_Depositar)
                         {
-                            //Si tiene suficiente dinero
+                            // Si tiene suficiente dinero
                             std::string numCuentaADepositar;
-                            std::cout<<"Ingrese el numero de cuenta que desea depositar:";
-                            cin>>numCuentaADepositar;
+                            std::cout << "Ingrese el numero de cuenta que desea depositar:";
+                            cin >> numCuentaADepositar;
                             bool cuentaEncontrada = false;
                             for (int i = 0; i < cuentas.size(); i++)
                             {
-                                if(cuentas[i]->getTipoCuenta() == cuentaAhorro && cuentas[i]->getNumero() == numCuentaADepositar)
+                                if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && cuentas[i]->getNumero() == numCuentaADepositar)
                                 {
-                                    std::cout<<"Cuenta encontrada con exito!"<<endl;
+                                    std::cout << "Cuenta encontrada con exito!" << endl;
 
                                     cuentaEncontrada = true;
 
-                                    std::cout<<"Depositando dinero..."<<endl;
+                                    std::cout << "Depositando dinero..." << endl;
                                     std::string fechaDepositoHoy;
-                                    std::cout<<"Ingrese la fecha:";
-                                    cin>>fechaDepositoHoy;
-                                    Deposito* newDeposito = new Deposito(numCuentaElegida,numCuentaADepositar,monto_a_Depositar,fechaDepositoHoy,cuentaAhorro);
-                                    
-                                    //Guardo el deposito en ambas cuentas
+                                    std::cout << "Ingrese la fecha:";
+                                    cin >> fechaDepositoHoy;
+                                    Deposito *newDeposito = new Deposito(numCuentaElegida, numCuentaADepositar, monto_a_Depositar, fechaDepositoHoy, tipoCuenta::cuentaAhorro);
+
+                                    // Guardo el deposito en ambas cuentas
                                     saveCliente->getCuentas()[i]->addDeposito(newDeposito);
                                     cuentas[i]->addDeposito(newDeposito);
-                                    //Guardo el deposito en el banco
+                                    // Guardo el deposito en el banco
                                     depositos.push_back(newDeposito);
-                                    //Modifico los monto de ambas cuentas, porque se ha gastado
-                                    cuentas[i]->setmonto(cuentas[i]->getmonto()+monto_a_Depositar);
-                                    saveCliente->getCuentas()[i]->setmonto(saveCliente->getCuentas()[i]->getmonto()-monto_a_Depositar);
+                                    // Modifico los monto de ambas cuentas, porque se ha gastado
+                                    cuentas[i]->setmonto(cuentas[i]->getmonto() + monto_a_Depositar);
+                                    saveCliente->getCuentas()[i]->setmonto(saveCliente->getCuentas()[i]->getmonto() - monto_a_Depositar);
                                     break;
                                 }
                             }
-                            if(cuentaEncontrada == false)
+                            if (cuentaEncontrada == false)
                             {
-                                std::cout<<"Ingreso una cuenta ahorro destino inexistente"<<endl;
+                                std::cout << "Ingreso una cuenta ahorro destino inexistente" << endl;
                             }
                         }
-                        cuentaClienteeligdaexiste =true;
+                        cuentaClienteeligdaexiste = true;
                         break;
                     }
-                    
                 }
-                if(cuentaClienteeligdaexiste == false)
+                if (cuentaClienteeligdaexiste == false)
                 {
-                    std::cout<<"La cuenta de ahorro del cliente ingresada no existe"<<endl;
+                    std::cout << "La cuenta de ahorro del cliente ingresada no existe" << endl;
                 }
-                
             }
-            else if(number == 8)
+            else if (number == 8)
             {
-                std::cout<<"Regresando"<<endl;
+                std::cout << "Regresando" << endl;
             }
         }
         else
         {
             std::cout << "No se encontro el DNI" << std::endl;
         }
+    }
+
+    void accessPrestamosDeDinero()
+    {
+        int num;
+        cout << "-----------------------" << endl;
+        cout << "1.1 Buscar cuenta de ahorro" << endl;
+        cout << "1.2 Crear cuenta de ahorro" << endl;
+        cout << "1.3 Cancelar Tarjeta Credito" << endl;
+        cout << "1.4 Solicitar Tarjeta Credito" << endl;
+        cout << "1.5 Cancelar Cuenta de Ahorro" << endl;
+        cout << "1.6 Solicitar todas las cuentas de ahorro" << endl;
+        cout << "1.7 Realizar un deposito" << endl;
+        cout << "1.8 Regresar" << endl;
+        cout << "-----------------------" << endl;
+        cin >> num;
     }
 
 public:
@@ -418,3 +434,4 @@ public:
         cout << "Gracias por su visita. Tenga un buen dia. " << endl;
     }
 };
+#endif // PROYECTO_FFFFF_SISTEMABANCO_H 

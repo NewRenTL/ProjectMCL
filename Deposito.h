@@ -1,14 +1,11 @@
 
 #ifndef deposito1
 #define deposito1
-
-#include <string>
 #include "Cuenta.h"
-
+#include <string>
 class Deposito
 {
     private:
-    
     std::string nombreCuentaEmision;
     std::string nombreCuentaLlegada;
     tipoCuenta tipoDeCuenta;
@@ -17,13 +14,14 @@ class Deposito
     
     public:
     Deposito(std::string _nombreCuentaEmision,std::string _nombreCuentaLlegada,
-    double _monto,std::string _fecha,enum::tipoCuenta _tipoCuenta):
+    double _monto,std::string _fecha,tipoCuenta _tipoCuenta):
     nombreCuentaEmision(_nombreCuentaEmision),
     nombreCuentaLlegada(_nombreCuentaLlegada),
     monto(_monto),
-    fecha(_fecha),
-    tipoDeCuenta(_tipoCuenta)
-    {};
+    fecha(_fecha)
+    {
+        tipoDeCuenta = _tipoCuenta;
+    };
 
     double getMonto()
     {
@@ -63,7 +61,6 @@ class Deposito
     {
         nombreCuentaLlegada = _newCuentaLlegada;
     }
-
 
 };
 
