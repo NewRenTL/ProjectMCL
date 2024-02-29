@@ -6,6 +6,7 @@
 #define PROYECTO_FFFFF_CUENTA_H
 #include <iostream>
 #include "Tarjeta.h"
+#include "Deposito.h"
 using namespace std;
 
 enum tipoCuenta{  // es una enumeración
@@ -19,6 +20,7 @@ private:
     double monto;
     bool estado;
     tipoCuenta tipoCuenta;
+    vector <Deposito*> depositos;
     Tarjeta *tarjeta; //puntero a una tarjeta
 
 public:
@@ -65,6 +67,10 @@ public:
     void setTarjeta(Tarjeta* pointer)
     {
         tarjeta = pointer;
+    }
+    void addDeposito(Deposito* deposito)
+    {
+        depositos.push_back(deposito);
     }
 
 };

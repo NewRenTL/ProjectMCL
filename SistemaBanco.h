@@ -23,6 +23,7 @@ private:
     vector<Cliente *> clientes;
     vector<Cuenta *> cuentas;
     vector<Tarjeta *> tarjetas;
+    vector<Deposito*> depositos;
 
 private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a optimizar procesos dentro de las funciones publicas
     // o sea el usuario no puede utilizar estos metodos
@@ -91,7 +92,8 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         cout << "1.1 Buscar cliente" << endl;
         cout << "1.2 Agregar cliente" << endl;
         cout << "1.3 Eliminar cliente" << endl;
-        cout << "1.4 Regresar" << endl;
+        cout << "1.4 Listar servicios de cliente"<<endl;
+        cout << "1.5 Regresar" << endl;
         cout << "-----------------------" << endl;
         cout << "Ingresa tu opcion: ";
         cin >> num;
@@ -175,7 +177,8 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
             cout << "1.4 Solicitar Tarjeta Debito" << endl;
             cout << "1.5 Cancelar Cuenta de Ahorro" << endl;
             cout << "1.6 Solicitar todas las cuentas de ahorro" << endl;
-            cout << "1.7 Regresar" << endl;
+            cout << "1.7 Realizar un deposito"<<endl;
+            cout << "1.8 Regresar" << endl;
             std::cout << "Ingresar una opcion:";
             cin >> number;
             if (number == 1)
@@ -301,7 +304,85 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                         std::cout<<"---------------------"<<std::endl;
                     }
                 }
+            }
+            else if(number == 7)
+            {
+                double monto_a_Depositar;
+                cout<<"Cual es el monto a depositar:";
+                cin>>monto_a_Depositar;
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if(saveCliente->getCuentas()[i]->getTipoCuenta() == cuentaAhorro)
+                    {
+                        std::cout<<"------------------"<<endl;
+                        std::cout<<cuentas[i]<<endl;
+                        std::cout<<"------------------"<<endl;
+                    }
+                }
+                //Cuenta del cliente que elegira para depositar
+                std::string numCuentaElegida;
+                std::cout<<"Ingrese su numero cuenta que elegira para depositar";
+                cin>>numCuentaElegida;  
+                bool cuentaClienteeligdaexiste = false;
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if(saveCliente->getCuentas()[i]->getTipoCuenta() == cuentaAhorro && saveCliente->getCuentas()[i]->getNumero()==numCuentaElegida)
+                    {
+                        if(saveCliente->getCuentas()[i]->getmonto() < monto_a_Depositar)
+                        {
+                            std::cout<<"La cantidad de dinero en la cuenta no es suficiente"<<endl;
+                        }
+                        if(saveCliente->getCuentas()[i]->getmonto() >= monto_a_Depositar)
+                        {
+                            //Si tiene suficiente dinero
+                            std::string numCuentaADepositar;
+                            std::cout<<"Ingrese el numero de cuenta que desea depositar:";
+                            cin>>numCuentaADepositar;
+                            bool cuentaEncontrada = false;
+                            for (int i = 0; i < cuentas.size(); i++)
+                            {
+                                if(cuentas[i]->getTipoCuenta() == cuentaAhorro && cuentas[i]->getNumero() == numCuentaADepositar)
+                                {
+                                    std::cout<<"Cuenta encontrada con exito!"<<endl;
+
+                                    cuentaEncontrada = true;
+
+                                    std::cout<<"Depositando dinero..."<<endl;
+                                    std::string fechaDepositoHoy;
+                                    std::cout<<"Ingrese la fecha:";
+                                    cin>>fechaDepositoHoy;
+                                    Deposito* newDeposito = new Deposito(numCuentaElegida,numCuentaADepositar,monto_a_Depositar,fechaDepositoHoy,cuentaAhorro);
+                                    
+                                    //Guardo el deposito en ambas cuentas
+                                    saveCliente->getCuentas()[i]->addDeposito(newDeposito);
+                                    cuentas[i]->addDeposito(newDeposito);
+                                    //Guardo el deposito en el banco
+                                    depositos.push_back(newDeposito);
+                                    //Modifico los monto de ambas cuentas, porque se ha gastado
+                                    cuentas[i]->setmonto(cuentas[i]->getmonto()+monto_a_Depositar);
+                                    saveCliente->getCuentas()[i]->setmonto(saveCliente->getCuentas()[i]->getmonto()-monto_a_Depositar);
+                                    break;
+                                }
+                            }
+                            if(cuentaEncontrada == false)
+                            {
+                                std::cout<<"Ingreso una cuenta ahorro destino inexistente"<<endl;
+                            }
+                        }
+                        cuentaClienteeligdaexiste =true;
+                        break;
+                    }
+                    
+                }
+                if(cuentaClienteeligdaexiste == false)
+                {
+                    std::cout<<"La cuenta de ahorro del cliente ingresada no existe"<<endl;
+                }
                 
+            }
+            else if(number == 8)
+            {
+                std::cout<<"Regresando"<<endl;
             }
         }
         else
