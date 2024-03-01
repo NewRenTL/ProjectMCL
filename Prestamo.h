@@ -9,6 +9,7 @@ using namespace std;
 
 class Prestamo {
 private:
+    string id;
     string fechaPrestamo;
     double monto;
     int numeroCuotas;
@@ -21,8 +22,9 @@ public:
     // en el constructor no ponemos el parámetro para el precio de la cuota porque para eso primero tenemos
     // que saber el monto y el numero de cuotas
 
-    Prestamo(string _fechaPrestamo, double _monto, int _numeroCuotas, float _interes, bool _estadoPrestamo)
+    Prestamo(string _id,string _fechaPrestamo, double _monto, int _numeroCuotas, float _interes, bool _estadoPrestamo)
     {
+        id = _id;
         fechaPrestamo = _fechaPrestamo;
         monto = _monto;
         numeroCuotas = _numeroCuotas;
@@ -30,6 +32,11 @@ public:
         estadoPrestamo = _estadoPrestamo;
         precioCuota =((((float)(interes)/(100/1.0))*monto) + monto)/(numeroCuotas/1.0); // para que salga decimal siempre dividimos al numerador entre 1.0
 
+    }
+
+    string getId()
+    {
+        return id;
     }
 
     string getfechaPrestamo() {

@@ -9,6 +9,7 @@
 #include <vector>
 #include "util.h"
 #include "Deposito.h"
+#include "Prestamo.h"
 using namespace std;
 
 
@@ -17,15 +18,17 @@ private:
     string numero;
     double monto;
     bool estado;
-    tipoCuenta tipoCuenta;
+    tipoCuenta tipocuenta;
     std::vector<Deposito*> depositos;
+    std::vector<Prestamo*> prestamos;
     Tarjeta *tarjeta; //puntero a una tarjeta
 
 public:
 
     Cuenta(string _numero,enum::tipoCuenta _tipoCuenta,Tarjeta *tarjeta1){
         numero = _numero;
-        tipoCuenta = _tipoCuenta;
+        monto = 0;
+        tipocuenta = _tipoCuenta;
         tarjeta = tarjeta1;
         estado = true; // se crea una tarjeta, su estado es activo
     }
@@ -54,7 +57,7 @@ public:
     }
 
     enum::tipoCuenta getTipoCuenta() const {
-        return tipoCuenta;
+        return tipocuenta;
     }
 
     Tarjeta* getTarjeta()
@@ -70,6 +73,26 @@ public:
     {
         depositos.push_back(deposito);
     }
+
+    void addPrestamo(Prestamo* prestamo)
+    {
+        if(tipocuenta == tipoCuenta::cuentaCredito)
+        {
+            prestamos.push_back(prestamo);
+        }
+    }
+
+    vector<Deposito*> getDepositos()
+    {
+        return depositos;
+    }
+
+    vector<Prestamo*> getPrestamos()
+    {
+        return prestamos;
+    }
+
+
 
 };
 

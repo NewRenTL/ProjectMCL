@@ -71,6 +71,24 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         return newccv;
     }
 
+    std::string generateId()
+    {
+        std::string nuevoId = "";
+        for (int i = 0; i < 10; i++)
+        {
+            if (i < 5)
+            {
+                nuevoId += generateRandomNumber(65, 90);
+            }
+            else
+            {
+                nuevoId += to_string(generateRandomNumber(0, 9));
+            }
+        }
+
+        return nuevoId;
+    }
+
     int menu()
     {
         int num;
@@ -79,8 +97,8 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         cout << "1. Clientes" << endl;
         cout << "2. Cuentas de ahorro" << endl;
         cout << "3. Cuentas de credito" << endl;
-        cout << "3. Prestamos de dinero" << endl;
-        cout << "4. Salir" << endl;
+        cout << "4. Prestamos de dinero" << endl;
+        cout << "5. Salir" << endl;
         cout << "-----------------------" << endl;
         cout << "Ingresa tu opcion: ";
         cin >> num;
@@ -92,9 +110,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         cout << "-----------------------" << endl;
         cout << "1.1 Buscar cliente" << endl;
         cout << "1.2 Agregar cliente" << endl;
-        cout << "1.3 Eliminar cliente" << endl;
-        cout << "1.4 Listar servicios de cliente" << endl;
-        cout << "1.5 Regresar" << endl;
+        cout << "1.3 Regresar" << endl;
         cout << "-----------------------" << endl;
         cout << "Ingresa tu opcion: ";
         cin >> num;
@@ -194,6 +210,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                     {
                         saveClientexist = true;
                         std::cout << saveCliente->getCuentas()[i];
+                        break;
                     }
                 }
                 if (saveClientexist == false)
@@ -272,9 +289,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
                     // Verificamos que la cuenta sea de Ahorro, el numero de cuenta coincida y que la tarjeta no exista
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro 
-                    && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar 
-                    && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
                     {
                         std::cout << "Generando Tarjeta..." << std::endl;
                         std::string newNumberTarjeta = generateNumberCard();
@@ -305,8 +320,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 bool encontradoCuenta = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar 
-                    && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
+                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro)
                     {
                         // Desactivamos la cuenta
                         saveCliente->getCuentas()[i]->setestado(false);
@@ -435,7 +449,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
     void accesoCuentasCredito()
     {
         std::string existDni;
-        std::cout << "Ingresa el Dni del Cliente:" << std::endl;
+        std::cout << "Ingresa el Dni del Cliente:";
         std::cin >> existDni;
         Cliente *saveCliente;
         bool existsDniBool = false;
@@ -451,14 +465,15 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         {
             int number;
             cout << "-----------------------" << endl;
-            cout << "1.1 Buscar cuenta de credito" << endl;
-            cout << "1.2 Crear cuenta de credito" << endl;
-            cout << "1.3 Cancelar Tarjeta Credito" << endl;
-            cout << "1.4 Solicitar Tarjeta Credito" << endl;
-            cout << "1.5 Cancelar Cuenta de Credito" << endl;
-            cout << "1.6 Solicitar todas las cuentas de credito" << endl;
-            cout << "1.7 Regresar" << endl;
+            cout << "3.1 Buscar cuenta de credito" << endl;
+            cout << "3.2 Crear cuenta de credito" << endl;
+            cout << "3.3 Cancelar Tarjeta Credito" << endl;
+            cout << "3.4 Solicitar Tarjeta Credito" << endl;
+            cout << "3.5 Cancelar Cuenta de Credito" << endl;
+            cout << "3.6 Solicitar todas las cuentas de credito" << endl;
+            cout << "3.7 Regresar" << endl;
             cout << "-----------------------" << endl;
+            cout << "Ingresa la opcion que deseas:";
             cin >> number;
             if (number == 1)
             {
@@ -472,12 +487,12 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                     {
                         saveClientexist = true;
                         std::cout << saveCliente->getCuentas()[i];
-                    }
-                    if (saveClientexist == false)
+                    }    
+                }
+                if (saveClientexist == false)
                     {
                         std::cout << "La cuenta no existe" << endl;
                     }
-                }
             }
             else if (number == 2)
             {
@@ -556,13 +571,11 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 bool exito = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro 
-                    && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar 
-                    && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaBuscar && saveCliente->getCuentas()[i]->getTarjeta() == nullptr)
                     {
                         std::cout << "Generando Tarjeta..." << std::endl;
                         std::string newNumberTarjeta = generateNumberCard();
-                        std::cout<<"Numero de tarjeta:"<<newNumberTarjeta<<endl;
+                        std::cout << "Numero de tarjeta:" << newNumberTarjeta << endl;
                         std::string newCCV = generateCCV();
                         std::cout << "CCV:" << newCCV << std::endl;
                         std::string fechaCorte;
@@ -575,14 +588,14 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                         std::cout << "Interes:" << interes << "%" << endl;
                         double limiteMonto = 20000.0;
                         std::cout << "Limite Monto:" << limiteMonto << endl;
-                        //Creamos la tarjeta de Credito
+                        // Creamos la tarjeta de Credito
                         Tarjeta *tarjetaCreditoNueva = new TCredito(newNumberTarjeta, true, newCCV, interes, limiteMonto, fechaCorte, fechaPago);
-                        
-                        //Agregar a tarjetas del banco
+
+                        // Agregar a tarjetas del banco
                         tarjetas.push_back(tarjetaCreditoNueva);
 
                         saveCliente->getCuentas()[i]->setTarjeta(tarjetaCreditoNueva);
-                        
+
                         std::cout << "Tarjeta Credito Generada!!" << std::endl;
                         exito = true;
                         break;
@@ -601,8 +614,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                 bool encontradoCuenta = false;
                 for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                 {
-                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar 
-                    && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
+                    if (saveCliente->getCuentas()[i]->getNumero() == numeroCuentaBuscar && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
                     {
                         // Desactivamos la cuenta
                         saveCliente->getCuentas()[i]->setestado(false);
@@ -622,7 +634,7 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
             }
             else if (number == 6)
             {
-                std::cout<<"Lista de cuentas:"<<endl;
+                std::cout << "Lista de cuentas:" << endl;
                 for (int i = 0; i < cuentas.size(); i++)
                 {
                     if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
@@ -646,6 +658,204 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
         }
     }
 
+    void accesoPrestamos()
+    {
+        std::string existDni;
+        std::cout << "Ingresa el Dni del Cliente:";
+        std::cin >> existDni;
+        Cliente *saveCliente;
+        bool existsDniBool = false;
+        for (int i = 0; i < clientes.size(); ++i)
+        {
+            if (existDni == clientes[i]->getDni())
+            {
+                saveCliente = clientes[i];
+                existsDniBool = true;
+            }
+        }
+        if (existsDniBool == true)
+        {
+            int number;
+            cout << "-----------------------" << endl;
+            cout << "4.1 Crear un Prestamo" << endl;
+            cout << "4.2 Cancelar Prestamo" << endl;
+            cout << "4.3 Visualizar Prestamos" << endl;
+            cout << "4.4 Regresar" << endl;
+            cout << "-----------------------" << endl;
+            cout<<"Ingrese la opcion que desee:";
+            cin >> number;
+            if (number == 1)
+            {
+                std::cout << "Lista de Cuentas Credito del cliente:" << endl;
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
+                    {
+                        std::cout << "-------------" << std::endl;
+                        std::cout << saveCliente->getCuentas()[i];
+                        std::cout << "-------------" << std::endl;
+                    }
+                }
+
+                // Busquemos la cuenta
+                std::string nrCuenta;
+                std::cout << "Ingrese el numero de cuenta:";
+                cin >> nrCuenta;
+                bool saveClientexist = false;
+                for (int i = 0; i < saveCliente->getCuentas().size(); ++i)
+                {
+                    if (saveCliente->getCuentas()[i]->getNumero() == nrCuenta && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
+                    {
+                        cout << "Cuenta Credito Encontrada!!" << endl;
+                        saveClientexist = true;
+                        cout << saveCliente->getCuentas()[i];
+                        cout << "Agregando Prestamo..." << endl;
+
+                        string fechaPrestamo;
+                        cout << "Ingrese fecha del prestamo:";
+                        cin >> fechaPrestamo;
+                        double monto;
+                        cout << "Ingresa monto del prestamo:";
+                        cin >> monto;
+                        int numerocuotas;
+                        cout << "Ingreso el numero de cuotas:";
+                        cin >> numerocuotas;
+                        // El interes debe ser el mismo de la cuenta de credito
+                        float interes = 20;
+                        cout << "Interes:" << interes << "%" << endl;
+                        string idgeneradoPrestamo = generateId();
+                        Prestamo *nuevoPrestamo = new Prestamo(idgeneradoPrestamo, fechaPrestamo, monto, numerocuotas, interes, true);
+                        // Guardamos en la cuenta el prestamo
+                        saveCliente->getCuentas()[i]->addPrestamo(nuevoPrestamo);
+                        // Sumamos el monto prestado + el monto de la cuenta inicial
+                        saveCliente->getCuentas()[i]->setmonto(saveCliente->getCuentas()[i]->getmonto() + nuevoPrestamo->getmonto());
+                        // Guardamos en el banco el prestamo
+                        prestamos.push_back(nuevoPrestamo);
+                        cout << "Prestamo generado con el ID:" << idgeneradoPrestamo << endl;
+                        break;
+                    }
+                }
+                if (saveClientexist == false)
+                {
+                    std::cout << "La cuenta credito no existe" << endl;
+                }
+            }
+            else if (number == 2)
+            {
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if (saveCliente->getCuentas()[i]->getestado() == true && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
+                    {
+                        std::cout << "Numero de Cuenta Credito:" << saveCliente->getCuentas()[i]->getNumero() << endl;
+                    }
+                }
+
+                string buscarNumCredito;
+                cout << "Ingresa un numero de cuenta credito:";
+                cin >> buscarNumCredito;
+                bool existeCuentaCredito = false;
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if (saveCliente->getCuentas()[i]->getestado() == true && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito && saveCliente->getCuentas()[i]->getNumero() == buscarNumCredito)
+                    {
+                        existeCuentaCredito = true;
+                        std::cout << "Numero de Cuenta Credito:" << saveCliente->getCuentas()[i]->getNumero() << endl;
+                        vector<Prestamo *> capturarPrestamos = saveCliente->getCuentas()[i]->getPrestamos();
+                        for (int j = 0; j < capturarPrestamos.size(); j++)
+                        {
+
+                            if (capturarPrestamos[j]->getestadoPrestamo() == true)
+                            {
+                                cout << "------------------------" << endl;
+                                cout << "ID Prestamo:" << capturarPrestamos[j]->getId() << endl;
+                                cout << "Estado:" << (capturarPrestamos[j]->getestadoPrestamo() ? "Activo" : "Inactivo");
+                                cout << "------------------------" << endl;
+                            }
+                        }
+
+                        string idPrestamoCancelar;
+                        cout << "Ingrese el ID del prestamo a cancelar:";
+                        cin >> idPrestamoCancelar;
+                        bool existIdPrestamo = false;
+                        for (int i = 0; i < capturarPrestamos.size(); i++)
+                        {
+                            if (capturarPrestamos[i]->getId() == idPrestamoCancelar && capturarPrestamos[i]->getestadoPrestamo() == true)
+                            {
+                                existIdPrestamo = true;
+                                capturarPrestamos[i]->setestadoPrestamo(false);
+                                std::cout << "Prestamo Id:" << capturarPrestamos[i]->getId() << endl;
+                                std::cout << "Estado:" << (capturarPrestamos[i]->getestadoPrestamo() ? "Activo" : "Inactivo");
+                                break;
+                            }
+                            if (capturarPrestamos[i]->getId() == idPrestamoCancelar && capturarPrestamos[i]->getestadoPrestamo() == false)
+                            {
+                                existIdPrestamo = true;
+                                std::cout << "Prestamo Id:" << capturarPrestamos[i]->getId() << endl;
+                                std::cout << "Estado:" << (capturarPrestamos[i]->getestadoPrestamo() ? "Activo" : "Inactivo");
+                                break;
+                            }
+                        }
+                        if (existIdPrestamo == false)
+                        {
+                            std::cout << "No se encontro el prestamo por el ID" << endl;
+                        }
+                    }
+                }
+                if (existeCuentaCredito == false)
+                {
+                    cout << "No se encontro la cuenta credito" << endl;
+                }
+            }
+            else if (number == 3)
+            {
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if (saveCliente->getCuentas()[i]->getestado() == true && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito)
+                    {
+                        std::cout << "Numero de Cuenta:" << saveCliente->getCuentas()[i]->getNumero() << endl;
+                    }
+                }
+                string buscarNumCredito;
+                cout << "Ingresa un numero de cuenta credito:";
+                cin >> buscarNumCredito;
+                bool existeCuentaCredito = false;
+
+                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                {
+                    if (saveCliente->getCuentas()[i]->getestado() == true && saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaCredito && saveCliente->getCuentas()[i]->getNumero() == buscarNumCredito)
+                    {
+                        existeCuentaCredito = true;
+                        std::cout << "Numero de Cuenta:" << saveCliente->getCuentas()[i]->getNumero() <<"  Monto:"<<saveCliente->getCuentas()[i]->getmonto()<<" Estado:"<<(saveCliente->getCuentas()[i]->getestado()?"Activa":"Inactiva")<<endl;
+                        vector<Prestamo*> capturarPrestamos = saveCliente->getCuentas()[i]->getPrestamos();
+                        for (int j = 0; j < capturarPrestamos.size(); j++)
+                        {
+                            cout << "------------------------" << endl;
+                            cout << "Fecha        "<<"Monto     "<<"Nro  "<<"Cuota   "<<"Interes    "<<"Estado  "<<endl;
+                            cout<< capturarPrestamos[j]->getfechaPrestamo()
+                            <<"   "<<capturarPrestamos[j]->getmonto()
+                            <<"     "<<capturarPrestamos[j]->getnumeroCuotas()
+                            <<"    "<<capturarPrestamos[j]->getprecioCuota()
+                            <<"      "<<capturarPrestamos[j]->getinteres()
+                            <<"        "<<(capturarPrestamos[j]->getestadoPrestamo()?"Activo":"Inactivo")<<endl;
+                            //cout << "ID Prestamo:" << capturarPrestamos[j]->getId() << endl;
+                            //cout << "Estado:" << (capturarPrestamos[j]->getestadoPrestamo() ? "Activo" : "Inactivo")<<endl;
+                            cout << "------------------------" << endl;
+                        }
+                        break;
+                    }
+                }
+                if (existeCuentaCredito == false)
+                {
+                    cout << "No se encontro la cuenta credito" << endl;
+                }
+            }
+        }
+        else
+        {
+            std::cout << "No se encontro el DNI" << std::endl;
+        }
+    }
+
 public:
     // creamos constructor vacio;
     SistemaBanco(){};
@@ -654,7 +864,7 @@ public:
     {
 
         int opcion = 0;
-        while (opcion != 4)
+        while (opcion != 5)
         {
             opcion = menu();
             switch (opcion)
@@ -667,6 +877,9 @@ public:
                 break;
             case 3:
                 accesoCuentasCredito();
+                break;
+            case 4:
+                accesoPrestamos();
                 break;
             }
         }
