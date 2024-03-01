@@ -19,15 +19,15 @@ private:
     double monto;
     bool estado;
     tipoCuenta tipocuenta;
-    std::vector<Deposito*> depositos;
-    std::vector<Prestamo*> prestamos;
+    std::vector<Deposito*>depositos;
+    std::vector<Prestamo*>prestamos;
     Tarjeta *tarjeta; //puntero a una tarjeta
 
 public:
 
     Cuenta(string _numero,enum::tipoCuenta _tipoCuenta,Tarjeta *tarjeta1){
         numero = _numero;
-        monto = 0;
+        monto = 2000;
         tipocuenta = _tipoCuenta;
         tarjeta = tarjeta1;
         estado = true; // se crea una tarjeta, su estado es activo

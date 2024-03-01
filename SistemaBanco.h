@@ -356,85 +356,90 @@ private: // crearemos metodo de apoyo, porque el metodo de apoyo nos ayuda a opt
                     }
                 }
             }
-            else if (number == 7)
-            {
-                double monto_a_Depositar;
-                cout << "Cual es el monto a depositar:";
-                cin >> monto_a_Depositar;
-                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                else if (number == 7)
                 {
-                    // Te mostrare todas las cuenta de ahorro activas
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getestado() == true)
+                    double monto_a_Depositar;
+                    cout << "Cual es el monto a depositar:";
+                    cin >> monto_a_Depositar;
+                    for (int i = 0; i < saveCliente->getCuentas().size(); i++)
                     {
-                        std::cout << "------------------" << endl;
-                        std::cout << saveCliente->getCuentas()[i] << endl;
-                        std::cout << "------------------" << endl;
-                    }
-                }
-                // Cuenta del cliente que elegira para depositar
-                std::string numCuentaElegida;
-                std::cout << "Ingrese su numero cuenta que elegira para depositar";
-                cin >> numCuentaElegida;
-                bool cuentaClienteeligdaexiste = false;
-                for (int i = 0; i < saveCliente->getCuentas().size(); i++)
-                {
-                    // Verificaremos que el tipo de cuenta sea ahorro, el mismo numero y este activa
-                    if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaElegida && saveCliente->getCuentas()[i]->getestado() == true)
-                    {
-                        // Verificaremos si hay suficiente dinero para el deposito
-                        if (saveCliente->getCuentas()[i]->getmonto() < monto_a_Depositar)
+                        // Te mostrare todas las cuenta de ahorro activas
+                        if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getestado() == true)
                         {
-                            std::cout << "La cantidad de dinero en la cuenta no es suficiente" << endl;
+                            std::cout << "------------------" << endl;
+                            std::cout << saveCliente->getCuentas()[i] << endl;
+                            std::cout << "------------------" << endl;
                         }
-                        if (saveCliente->getCuentas()[i]->getmonto() >= monto_a_Depositar)
+                    }
+                    // Cuenta del cliente que elegira para depositar
+                    std::string numCuentaElegida;
+                    std::cout << "Ingrese su numero cuenta que elegira para depositar";
+                    cin >> numCuentaElegida;
+                    bool cuentaClienteeligdaexiste = false;
+                    for (int i = 0; i < saveCliente->getCuentas().size(); i++)
+                    {
+                        // Verificaremos que el tipo de cuenta sea ahorro, el mismo numero y este activa
+                        if (saveCliente->getCuentas()[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && saveCliente->getCuentas()[i]->getNumero() == numCuentaElegida && saveCliente->getCuentas()[i]->getestado() == true)
                         {
-                            // Si tiene suficiente dinero
-                            std::string numCuentaADepositar;
-                            std::cout << "Ingrese el numero de cuenta que desea depositar:";
-                            cin >> numCuentaADepositar;
-                            bool cuentaEncontrada = false;
-                            for (int i = 0; i < cuentas.size(); i++)
+                            // Verificaremos si hay suficiente dinero para el deposito
+                            if (saveCliente->getCuentas()[i]->getmonto() < monto_a_Depositar)
                             {
-                                // Buscamos la cuenta a depositar,tipoAhorro,mismo numero y este activa
-                                if (cuentas[i]->getTipoCuenta() == tipoCuenta::cuentaAhorro && cuentas[i]->getNumero() == numCuentaADepositar && cuentas[i]->getestado() == true)
+                                std::cout << "La cantidad de dinero en la cuenta no es suficiente" << endl;
+                            }
+                            if (saveCliente->getCuentas()[i]->getmonto() >= monto_a_Depositar)
+                            {
+                                // Si tiene suficiente dinero
+                                std::string numCuentaADepositar;
+                                std::cout << "Ingrese el numero de cuenta que desea depositar:";
+                                cin >> numCuentaADepositar;
+                                bool cuentaEncontrada = false;
+                                for (int j = 0; j < cuentas.size(); j++)
                                 {
-                                    std::cout << "Cuenta encontrada con exito!" << endl;
+                                    // Buscamos la cuenta a depositar,tipoAhorro,mismo numero y este activa
+                                    if (cuentas[j]->getTipoCuenta() == tipoCuenta::cuentaAhorro 
+                                    && cuentas[j]->getNumero() == numCuentaADepositar 
+                                    && cuentas[j]->getestado() == true)
+                                    {
+                                        std::cout << "Cuenta encontrada con exito!" << endl;
 
-                                    // Comprobacion que encontramos una cuenta
-                                    cuentaEncontrada = true;
+                                        // Comprobacion que encontramos una cuenta
+                                        cuentaEncontrada = true;
 
-                                    std::cout << "Depositando dinero..." << endl;
-                                    std::string fechaDepositoHoy;
-                                    std::cout << "Ingrese la fecha:";
-                                    cin >> fechaDepositoHoy;
+                                        std::cout << "Depositando dinero..." << endl;
+                                        std::string fechaDepositoHoy;
+                                        std::cout << "Ingrese la fecha:";
+                                        cin >> fechaDepositoHoy;
 
-                                    Deposito *newDeposito = new Deposito(numCuentaElegida, numCuentaADepositar, monto_a_Depositar, fechaDepositoHoy, tipoCuenta::cuentaAhorro);
+                                        Deposito *newDeposito = new Deposito(numCuentaElegida, numCuentaADepositar, monto_a_Depositar, fechaDepositoHoy, tipoCuenta::cuentaAhorro);
 
-                                    // Guardo el deposito en ambas cuentas
-                                    saveCliente->getCuentas()[i]->addDeposito(newDeposito);
-                                    cuentas[i]->addDeposito(newDeposito);
-                                    // Guardo el deposito en el banco
-                                    depositos.push_back(newDeposito);
-                                    // Modifico los monto de ambas cuentas, porque se ha gastado
-                                    cuentas[i]->setmonto(cuentas[i]->getmonto() + monto_a_Depositar);
-                                    saveCliente->getCuentas()[i]->setmonto(saveCliente->getCuentas()[i]->getmonto() - monto_a_Depositar);
-                                    break;
+                                        // Guardo el deposito en ambas cuentas
+                                        std::cout<<"Guardando Deposito"<<endl;
+                                        saveCliente->getCuentas()[i]->addDeposito(newDeposito);
+                                        cuentas[j]->addDeposito(newDeposito);
+                                        // Guardo el deposito en el banco
+                                        depositos.push_back(newDeposito);
+                                        // Modifico los monto de ambas cuentas, porque se ha gastado
+                                        cuentas[j]->setmonto(cuentas[j]->getmonto() + monto_a_Depositar);
+                                        std::cout<<"Cuenta destino monto:"<<cuentas[i]->getmonto()<<endl;
+                                        saveCliente->getCuentas()[i]->setmonto(saveCliente->getCuentas()[i]->getmonto() - monto_a_Depositar);
+                                        cout<<"Cuenta de emision monto:"<<saveCliente->getCuentas()[i]->getmonto()<<endl;
+                                        break;
+                                    }
+                                }
+                                if (cuentaEncontrada == false)
+                                {
+                                    std::cout << "Ingreso una cuenta ahorro destino inexistente" << endl;
                                 }
                             }
-                            if (cuentaEncontrada == false)
-                            {
-                                std::cout << "Ingreso una cuenta ahorro destino inexistente" << endl;
-                            }
+                            cuentaClienteeligdaexiste = true;
+                            break;
                         }
-                        cuentaClienteeligdaexiste = true;
-                        break;
+                    }
+                    if (cuentaClienteeligdaexiste == false)
+                    {
+                        std::cout << "La cuenta de ahorro del cliente ingresada no existe" << endl;
                     }
                 }
-                if (cuentaClienteeligdaexiste == false)
-                {
-                    std::cout << "La cuenta de ahorro del cliente ingresada no existe" << endl;
-                }
-            }
             else if (number == 8)
             {
                 std::cout << "Regresando" << endl;

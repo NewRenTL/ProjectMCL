@@ -4,9 +4,7 @@ using namespace std;
 
 int main()
 {
-
     SistemaBanco sistemaBanco;
     sistemaBanco.iniciarSistema();
-
     return 0;
 }

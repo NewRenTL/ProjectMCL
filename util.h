@@ -7,5 +7,4 @@ enum class tipoCuenta{ // es una enumeración
     cuentaCredito = 1
 };
 
-
 #endif 
